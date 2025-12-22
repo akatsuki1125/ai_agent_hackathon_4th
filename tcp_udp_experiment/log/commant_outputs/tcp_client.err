@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/koko/work/ai_agent_hackathon_4th/tcp_udp_experiment/udp_tcp_exp/tcp_client.py", line 6, in <module>
+    connection = socket.create_connection(SERVER_ADDR)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/koko/.local/share/uv/python/cpython-3.12.7-macos-aarch64-none/lib/python3.12/socket.py", line 839, in create_connection
+    host, port = address
+    ^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
