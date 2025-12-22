@@ -27,3 +27,59 @@
   - `recv` の引数（バッファサイズ）を忘れていた
 - `OSError: [Errno 57] Socket is not connected`
   - `listen` 用ソケットに `recv` していた（`conn.recv` が正しい）
+
+## 接続の作り方のバリエーション
+- サーバー側は `socket.create_server((host, port))` で bind+listen をまとめられる
+- クライアント側は `socket.socket()` で作って `connect()` する方法も動作確認済み
+- `connect()` の戻り値は `None` なので、送信はソケット本体に対して行う
+
+## tcpdump で見えたこと
+- `Flags [S]` → SYN、`[S.]` → SYN+ACK、`[P.]` → データ送信、`[F.]` → FIN
+- `options [...]` に TCP オプション（`mss`, `wscale`, `TS`, `sackOK` など）が出る
+- `length 100` は payload サイズ。`-X` で本文の hex/ASCII 表示が見える
+- 送信データが `b"\x00"*100` だと本文は `00` が並ぶ
+- ASCII 可視文字で送ると `tcpdump -X` の ASCII 欄で確認できる
+
+## TCP オプション（tcpdump で見た範囲）
+- `mss N`: 最大セグメントサイズ（TCPペイロード上限）
+- `wscale N`: ウィンドウスケール（受信ウィンドウの倍率）
+- `TS val X ecr Y`: タイムスタンプ（送信値/エコー値）
+- `sackOK`: 選択的ACK対応
+- `nop`: オプションのパディング
+- `eol`: オプション終端
+
+## tcpdump 1行の読み取り例
+```
+14:29:19.328462 IP 127.0.0.1.54153 > 127.0.0.1.8008: Flags [S], seq 2451870180, win 65535, options [mss 16344,nop,wscale 6,nop,nop,TS val 3459161528 ecr 0,sackOK,eol], length 0
+```
+- `14:29:19.328462`: パケットの捕捉時刻（ローカル時刻）
+- `IP`: IPv4 パケット
+- `127.0.0.1.54153 > 127.0.0.1.8008`: 送信元IP:ポート → 宛先IP:ポート
+- `Flags [S]`: SYN（接続開始）
+- `seq 2451870180`: 送信側の初期シーケンス番号（ISN）
+- `win 65535`: 受信ウィンドウサイズ（相手に通知する受信可能量）
+- `options [...]`: TCPオプション
+  - `mss 16344`: 最大セグメントサイズ
+  - `wscale 6`: ウィンドウスケール（2^6 倍）
+  - `TS val 3459161528 ecr 0`: タイムスタンプ
+  - `sackOK`: SACK対応
+  - `nop`: パディング
+  - `eol`: オプション終端
+- `length 0`: ペイロードなし（SYNは通常データを持たない）
+
+## tcpdump コマンド例とオプションの意味
+```
+tcpdump -i lo0 -nn -X -S tcp port 8008
+```
+- `-i lo0`: ループバックインターフェース（localhost）を監視
+- `-nn`: 逆引き/名前解決をしない（IP/ポートを数値で表示）
+- `-X`: payload を hex + ASCII で表示
+- `-S`: シーケンス番号を絶対値で表示（相対表示ではない）
+- `tcp port 8008`: 8008番ポートの TCP 通信に絞り込むフィルタ
+
+## シーケンス番号と ACK の理解
+- `ack N` は「次に欲しいバイト番号」を表す
+- 100バイト送れば seq/ack は 100 進む
+- FIN は 1バイト消費するため ACK が +1 される
+- `tcpdump` のデフォルトは相対 seq 表示
+- `-S` を付けると絶対 seq が見える（初期値が大きいのは仕様）

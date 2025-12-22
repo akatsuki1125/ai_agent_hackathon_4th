@@ -15,7 +15,8 @@ connection = skt.connect((SERVER_ADDR, PORT))
 print("finish connection_establish")
 
 datasize = 100
-data = b"\x00" * datasize
+#data = b"\x00" * datasize #null datas   
+data = bytes(range(0,100))
 
 print("send_packet")
 #connection.sendall(data)
