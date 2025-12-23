@@ -1,3 +1,14 @@
+if diff -u "$a" "$b" > "$out"; then
+  rm -f "$out"
+  return 0
+else
+  add=$(grep -c '^+' "$out" || true)
+  del=$(grep -c '^-' "$out" || true)
+  total=$(wc -l < "$out")
+
+  echo "[$(date '+%F %T')] CHANGE ${name} (+${add} -${del}, ${total} lines) -> $out" >> "$ALERTS"
+  return 0
+fi
 #!/usr/bin/env bash
 set -eu
 
@@ -40,15 +51,18 @@ diff_one () {
     return 0
   fi
 
-  # diffが空なら何もしない
   if diff -u "$a" "$b" > "$out"; then
     rm -f "$out"
     return 0
   else
-    # 差分があった：diffを残し、alertsに追記
-    echo "[$(date '+%F %T')] CHANGE ${name} -> $out" >> "$ALERTS"
+    add=$(grep -c '^+' "$out" || true)
+    del=$(grep -c '^-' "$out" || true)
+    total=$(wc -l < "$out")
+
+    echo "[$(date '+%F %T')] CHANGE ${name} (+${add} -${del}, ${total} lines) -> $out" >> "$ALERTS"
     return 0
   fi
+
 }
 
 diff_one "systemd-enabled" "$ENABLED_Y" "$ENABLED_T"

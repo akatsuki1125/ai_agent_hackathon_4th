@@ -16,6 +16,13 @@ OUTDIR_NET_ROUTES="$BASE/network/routes/$DATE"
 OUTDIR_NET_STATS="$BASE/network/stats/$DATE"
 
 OUTDIR_STORAGE_DF="$BASE/storage/df/$DATE"
+OUTDIR_STORAGE_DFI="$BASE/storage/df-i/$DATE"
+
+OUTDIR_CPU="$BASE/cpu/$DATE"
+
+df -h > "$OUTDIR_STORAGE_DF/$TIME.txt"
+df -i > "$OUTDIR_STORAGE_DFI/$TIME.txt"
+
 
 mkdir -p \
   "$OUTDIR_SYSTEMD_RUNNING" \
@@ -25,7 +32,9 @@ mkdir -p \
   "$OUTDIR_NET_INTERFACES" \
   "$OUTDIR_NET_ROUTES" \
   "$OUTDIR_NET_STATS" \
-  "$OUTDIR_STORAGE_DF"
+  "$OUTDIR_STORAGE_DF" \
+  "$OUTDIR_STORAGE_DFI" \
+  "$OUTDIR_CPU"
 
 # systemd: running services
 systemctl list-units --type=service --state=running \
@@ -61,5 +70,19 @@ ip route \
 } > "$OUTDIR_NET_STATS/$TIME.txt"
 
 df -h > "$OUTDIR_STORAGE_DF/$TIME.txt"
-df -i > "$OUTDIR_STORAGE_DF/$TIME.txt"
+df -i > "$OUTDIR_STORAGE_DFI/$TIME.txt"
 
+# cpu stats
+{
+  echo "### uptime"
+  uptime
+  echo
+  echo "### /proc/stat (cpu line)"
+  grep '^cpu ' /proc/stat
+  echo
+  echo "### top5 cpu"
+  ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 6
+  echo
+  echo "### top5 mem"
+  ps -eo pid,comm,%mem,%cpu --sort=-%mem | head -n 6
+} > "$OUTDIR_CPU/$TIME.txt"
