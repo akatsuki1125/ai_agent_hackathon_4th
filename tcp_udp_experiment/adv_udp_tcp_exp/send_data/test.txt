@@ -1,0 +1,2 @@
+hello world, this is a sample message designed for communication experiments over different protocols.
+It intentionally includes a short Japanese phrase like 日本語が少し混ざっています to verify encoding, framing, and transmission behavior under TCP, UDP, WebSocket, and WebRTC environments.

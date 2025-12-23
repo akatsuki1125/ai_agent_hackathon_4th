@@ -8,8 +8,12 @@ print("start connection_establish")
 connection = skt.connect((SERVER_ADDR, PORT))
 print("finish connection_establish")
 
-datasize = 100
-data = bytes(range(0,100))
+print("read_data")
+with open("send_data/otani.mp4", "rb") as f:
+    file_data = f.read()
+
+#datasize = 100
+data = file_data
 
 print("send_packet")
 skt.sendall(data)
