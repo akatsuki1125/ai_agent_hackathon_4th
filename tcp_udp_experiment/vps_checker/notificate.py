@@ -14,7 +14,7 @@ local_ip = sock.getsockname()
 sock.close()
 print(local_ip[0])
 
-message = {"text": f"\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} \nhello world from PYTHON !\nmy_ip_address: {str(local_ip[0])}"}
+message = {"text": f"\n{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} \nhello world from PYTHON !\nmy_ip_address: {str(local_ip[0])}:{str(local_ip[1])}"}
 status = requests.post(WEBHOOK_URL, json=message) 
 print(status.status_code, status.text)
 
