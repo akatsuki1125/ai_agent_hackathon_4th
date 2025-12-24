@@ -139,3 +139,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+
+#custom
+*/send_data
+*/received_data
+*/net_data
