@@ -2,7 +2,7 @@ const WEBHOOK_URL=process.env.SLACK_WEBHOOK_URL
 
 async function send(){
     const now = new Date().toISOString();
-    const ip = require("os").networkInterfaces()["en0"][1]["address"]
+    const ip = require("os").networkInterfaces()["eth0"][0]["address"]
 
     let response = await fetch(WEBHOOK_URL, {
                         method: "POST",
@@ -18,6 +18,6 @@ async function send(){
     require("fs").appendFileSync("post_check.log", `\n${now}: ${status} ${text} \nip_address:${ip}`)
 }
 
-console.log(require("os").networkInterfaces()["en0"][1]["address"])
+console.log(require("os").networkInterfaces()["eth0"][0]["address"])
 
 send()
