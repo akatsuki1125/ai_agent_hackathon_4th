@@ -51,14 +51,22 @@ data = data_sep
 records = []
 record = {}
 
+def extract(reg, str):
+    m = re.search(reg, str)
+    if m:
+        return m.group(1)
+    else:
+        return None
+
 for line in data:
     record['date'] = line[0]
     record['src_ip'] = line[1]
     record['dst_ip'] = line[2]
-    record['flag'] = re.search(flag_reg, line[3]).group(1)
-    record['options'] = re.search(options_reg, line[3]).group(1)
+    record['flag'] = extract(flag_reg, line[3])
+    record['options'] = extract(options_reg, line[3])
     for k,v in val_regs.items():
-        record[k] = re.search(v, line[3]).group(1)
+        record[k] = extract(v, line[3])
         
     records.append(record)
 print(records)
+
