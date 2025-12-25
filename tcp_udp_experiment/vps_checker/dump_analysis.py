@@ -5,7 +5,7 @@ dump_dir = "net_data"
 dump_files = os.listdir(dump_dir)
 file_path = os.path.join(dump_dir, dump_files[0])
 
-read_line_size = 5
+read_line_size = 1000
 
 data = []
 with open(file_path, 'r') as f:
@@ -21,7 +21,7 @@ options_reg = r'options (\[[^\]]*\])'
 
 
 def extract(reg, text, field=1):
-    m = re.search(reg, str)
+    m = re.search(reg, text)
     if m:
         return m.group(field)
     else:
@@ -29,9 +29,9 @@ def extract(reg, text, field=1):
 
 def split_ip_port(addr):
     if addr.count('.') == 4:
-        return addr.rsplit('.')
+        return addr.rsplit('.', 1)
     else:
-        return addr, ''
+        return [addr, '']
 
 records = []
 
