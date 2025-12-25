@@ -5,7 +5,7 @@ dump_dir = "net_data"
 dump_files = os.listdir(dump_dir)
 file_path = os.path.join(dump_dir, dump_files[0])
 
-read_line_size = 1000
+read_line_size = None
 
 data = []
 with open(file_path, 'r') as f:
