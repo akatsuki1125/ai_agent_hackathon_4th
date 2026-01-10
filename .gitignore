@@ -144,4 +144,11 @@ vite.config.ts.timestamp-*
 #custom
 */send_data
 */received_data
-*/net_data
+*/net_data*
+*/audios*
+*/bgms*
+*/figs*
+*/movies*
+*/send_movies*
+*/recv_movies*
+
