@@ -149,6 +149,6 @@ vite.config.ts.timestamp-*
 */bgms*
 */figs*
 */movies*
-*/send_movies*
-*/recv_movies*
+**/send_movies**
+**/recv_movies**
 

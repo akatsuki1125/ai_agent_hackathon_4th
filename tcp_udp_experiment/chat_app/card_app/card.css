@@ -1,0 +1,69 @@
+body {
+    margin: 0;
+}
+
+.site-header {
+    padding: 4px 12px;
+    height: 30px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    background-color: lightpink;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+    justify-content: space-between;
+}
+
+.logo {
+    font-family: "Dancing Script", cursive;
+    font-weight: 700;
+    font-size: 22px;
+    padding-left: 12px;
+}
+
+.center {
+    transform: translateX(-40px);
+}
+
+.search {
+    width: 240px;
+    padding: 6px 10px;
+    border: 0.5px solid #ccc;
+    border-radius: 999px;
+}
+
+.content {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fll, minmax(160px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-content {
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.card-header {
+    margin: 0;
+    background-color: lightblue;
+    align-items: center;
+    text-align: center;
+}
+
+.card.selected {
+    transform: scale(1.1);
+}

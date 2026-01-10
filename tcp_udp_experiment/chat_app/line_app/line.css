@@ -1,0 +1,28 @@
+.content_area {
+    align-items: center;
+}
+
+.chat_area {
+    align-items: center;
+}
+
+.input_area {
+    border: 0.5px solid #ccc;
+    border-radius: 5%;
+}
+
+.header_area {
+    margin: 0px;
+    padding: 0px;
+    background-color: lightgreen;
+}
+
+.message {
+    padding: 0px;
+    border: 0.5px solid #ccc;
+}
+
+.else {
+    background-color: #ccc;
+    border-radius: 999;
+}
