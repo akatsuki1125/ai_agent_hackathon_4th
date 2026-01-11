@@ -4,7 +4,7 @@ import uuid
 
 client_list = set()
 users = {}
-descs = {}
+payloads = {}
 
 async def echo(websocket):
     async for message in websocket:
@@ -15,8 +15,16 @@ async def echo(websocket):
             print(users)
 
 
+async def signaling(websocket):
+    async for payload in websocket:
+        payloads[websocket] = payload
+        
+    await websocket.send(payloads)
+    print(payloads)
+
+
 async def main():
-    async with serve(echo, "127.0.0.1", port=8765) as server:
+    async with serve(signaling, "127.0.0.1", port=8765) as server:
         await server.serve_forever()
 
 asyncio.run(main())
