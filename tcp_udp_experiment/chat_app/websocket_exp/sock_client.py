@@ -9,6 +9,6 @@ def hello():
             recv = websocket.recv()
             print(f"recv_message: {recv}")
             cnt += 1
-            time.sleep(10)
+            time.sleep(1)
 
 hello()

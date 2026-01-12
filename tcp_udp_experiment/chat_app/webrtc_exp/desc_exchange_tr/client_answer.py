@@ -28,7 +28,6 @@ async def main():
         await pc.setRemoteDescription(offer_desc)
 
         print("search icecandidates")
-
         @pc.on("icegatheringstatechange")
         def on_state():
             print("ice state:", pc.iceGatheringState)
