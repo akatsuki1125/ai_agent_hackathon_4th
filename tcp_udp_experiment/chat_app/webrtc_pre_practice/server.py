@@ -1,19 +1,47 @@
 import asyncio
 from websockets.asyncio.server import serve
+import json
+
+name_list = ["nanashi", "hachimitsu", "neko", "inu", "girrafe"]
+clients = {}
+desks = {}
+websockets = set()
+
 
 async def echo(websocket):
-    #print(type(websocket))
-    #print(websocket)
-    # ルーム設定みたいなのは，確かにあったほうが便利な気がしてきた
-    # 送る相手を明示しないところがちょっと難しいな，というかサーバーから無理やり送りつけるのは無理なんだろ？
+    if websocket not in websockets:
+        print(f"new connection from: {websocket}")
+        websockets.add(websocket)
+        desks[websocket] = "no_set"
+
     async for message in websocket:
-        print(websocket, message)
-        await websocket.send("<< "+message+" >>")
+        message = json.loads(message)
+        #print(message)
+        #print(type(message))
+        if message["user"]=="offer":
+            if desks[websocket] == "no_set":
+                print("[start] set descriptinon from offer")
+                desks[websocket] = (message["desc_type"], message["desc_sdp"])
+                clients["offer"] = websocket
+                print("[complete] set descriptinon from offer")
+
+        if message["user"]=="answer":
+            print(f"connection_from_answer {message}")
+            if desks[websocket] == "no_set":
+                desks[websocket] = "wait_for_offer"
+                await websocket.send(json.dumps(desks[clients["offer"]]))
+                continue
+            if desks[websocket] == "wait_for_offer":
+                print(f"recv_from_ans: {message}")
+                desks[websocket] = (message["desc_type"], message["desc_sdp"])
+                await clients["offer"].send(json.dumps(desks[websocket]))
+        
+        print(desks)
+
 
 async def main():
     async with serve(echo, "127.0.0.1", port=8765) as server:
         await server.serve_forever()
-        # ここに await が入っていないと動かない理由は？？
-        # server.serve_forever が終わるまで待たないから．．．？
+
 
 asyncio.run(main())
